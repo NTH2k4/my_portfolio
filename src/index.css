@@ -1,0 +1,349 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+.delay-600 {
+  animation-delay: 600ms;
+}
+
+.delay-800 {
+  animation-delay: 800ms;
+}
+
+/* Intersection Observer animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 1s ease-out;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Custom styles */
+.text-stroke {
+  -webkit-text-stroke: 2px #cc73f8;
+  color: transparent;
+}
+
+.dark .text-stroke-light {
+  -webkit-text-stroke: 1px #cc73f8;
+  color: transparent;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(26, 26, 26, 0.9) 100%);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.project-card:hover::before {
+  opacity: 1;
+}
+
+.marquee {
+  animation: marquee 30s linear infinite; /* Increase duration for smoother motion */
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%); /* Ensure smooth looping */
+  }
+}
+
+.timeline-section {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.timeline-section.active {
+  opacity: 1;
+}
+
+.timeline-indicator {
+  position: relative;
+}
+
+.timeline-indicator::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  background-color: gray;
+  z-index: -1;
+}
+
+.timeline-indicator.active::before {
+  background-color: var(--primary-color);
+}
+
+.timeline-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: gray;
+  transition: background-color 0.5s ease-in-out;
+  position: relative;
+  z-index: 5;
+}
+
+.timeline-dot.active {
+  background-color: var(--primary-color);
+}
+
+.timeline-line {
+  width: 2px;
+  height: 100px;
+  background-color: gray;
+  transition: background-color 0.5s ease-in-out;
+}
+
+.timeline-line.active {
+  background-color: var(--primary-color);
+}
+
+.content {
+  height: calc(100vh - 80px); /* Adjust based on your header height */
+  overflow-y: auto;
+}
+
+.social-button {
+  background: transparent;
+  position: relative;
+  padding: 0px 15px;
+  display: flex;
+  align-items: center;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid;
+  border-radius: 25px;
+  outline: none;
+  overflow: hidden;
+  color: inherit;
+  transition: color 0.3s 0.1s ease-out;
+  text-align: center;
+}
+
+.social-button span {
+  margin: 10px;
+  transition: color 0.3s 0.1s ease-out; /* Ensure text color changes to white on hover */
+}
+
+.social-button .icon {
+  transition: color 0.3s 0.1s ease-out; /* Ensure icon color changes to white on hover */
+}
+
+.social-button::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  content: "";
+  border-radius: 50%;
+  display: block;
+  width: 20em;
+  height: 20em;
+  left: -5em;
+  text-align: center;
+  transition: box-shadow 0.5s ease-out;
+  z-index: -1;
+}
+
+.social-button:hover {
+  color: #fff; /* Ensure text color changes to white on hover */
+}
+
+.social-button:hover span,
+.social-button:hover .icon {
+  color: #fff; /* Ensure text and icon colors change to white on hover */
+}
+
+.social-button:hover::before {
+  box-shadow: inset 0 0 0 10em;
+}
+
+.social-button.github {
+  border-color: #444;
+  color: #aaa;
+}
+
+.social-button.github:hover::before {
+  box-shadow: inset 0 0 0 10em #333;
+}
+
+.social-button.linkedin {
+  border-color: #0077b5;
+  color: #0077b5;
+}
+
+.social-button.linkedin:hover::before {
+  box-shadow: inset 0 0 0 10em #0077b5;
+}
+
+.social-button.email {
+  border-color: #d44638;
+  color: #d44638;
+}
+
+.social-button.email:hover::before {
+  box-shadow: inset 0 0 0 10em #d44638;
+}
+
+.btn-container {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.btn-container i {
+  display: inline-block;
+  position: relative;
+  top: -9px;
+}
+
+label {
+  font-size: 13px;
+  color: #424242;
+  font-weight: 500;
+}
+
+.btn-color-mode-switch {
+  display: inline-block;
+  margin: 0px;
+  position: relative;
+}
+
+.btn-color-mode-switch > label.btn-color-mode-switch-inner {
+  margin: 0px;
+  width: 140px;
+  height: 30px;
+  background: #E0E0E0;
+  border-radius: 26px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.btn-color-mode-switch > label.btn-color-mode-switch-inner:before {
+  content: attr(data-on);
+  position: absolute;
+  font-size: 12px;
+  font-weight: 500;
+  top: 7px;
+  right: 20px;
+}
+
+.btn-color-mode-switch > label.btn-color-mode-switch-inner:after {
+  content: attr(data-off);
+  width: 70px;
+  height: 27px;
+  background: #fff;
+  border-radius: 26px;
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0px 0px 6px -2px #111;
+  padding: 5px 0px;
+}
+
+.btn-color-mode-switch > .alert {
+  display: none;
+  background: #FF9800;
+  border: none;
+  color: #fff;
+}
+
+.btn-color-mode-switch input[type="checkbox"] {
+  cursor: pointer;
+  width: 50px;
+  height: 25px;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  margin: 0px;
+}
+
+.btn-color-mode-switch input[type="checkbox"]:checked + label.btn-color-mode-switch-inner {
+  background: #151515;
+  color: #fff;
+}
+
+.btn-color-mode-switch input[type="checkbox"]:checked + label.btn-color-mode-switch-inner:after {
+  content: attr(data-on);
+  left: 68px;
+  background: #3c3c3c;
+}
+
+.btn-color-mode-switch input[type="checkbox"]:checked + label.btn-color-mode-switch-inner:before {
+  content: attr(data-off);
+  right: auto;
+  left: 20px;
+}
+
+.btn-color-mode-switch input[type="checkbox"]:checked ~ .alert {
+  display: block;
+}
+
+.dark-preview {
+  background: #0d0d0d;
+}
+
+.white-preview {
+  background: #fff;
+}
