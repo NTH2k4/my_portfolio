@@ -1,0 +1,28 @@
+{
+  "siteTitle": "BEATER.",
+  "about": "About",
+  "contact": "Contact",
+  "welcome": "Welcome!",
+  "name": "My name is Hieu.",
+  "heroDescription": "Welcome to my portfolio website!",
+  "aboutMe": {
+    "title": "About Me",
+    "description": "I'm a software developer with extensive experience in mobile application development and a passion for solving complex algorithmic problems. I constantly seek opportunities to apply my programming skills to create innovative and efficient products while continuously learning to enhance my expertise and optimize technical solutions."
+  },
+  "skills": "Skills",
+  "developerWorkspace": "Developer workspace",
+  "myProject": {
+    "title": "My Project",
+    "view": "View Project"
+  },
+  "mySocialNetwork": {
+    "title": "My Social Network"
+  },
+  "me": "Me",
+  "project": "Project",
+  "webDevelopment": "Web Development",
+  "uiDesign": "UI Design",
+  "socialNetwork": "Social Network",
+  "allRightsReserved": "All rights reserved.",
+  "visitors": "Visitors"
+}

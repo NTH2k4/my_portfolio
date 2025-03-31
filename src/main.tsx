@@ -5,6 +5,9 @@ import App from './App.tsx';
 import { ThemeProvider } from './ThemeContext';
 import './index.css';
 
+// Import i18n configuration
+import './i18n';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>

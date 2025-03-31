@@ -3,13 +3,26 @@ import { useSpring, animated } from 'react-spring';
 import { Github, Linkedin, Mail, ArrowRight, Menu, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
+// Import quốc kỳ từ thư mục assets
+import usFlag from '/dist/assets/flags/us.png';
+import vnFlag from '/dist/assets/flags/vn.png';
 
 // Import all images from the slides directory
 const images = Object.values(import.meta.glob('/dist/assets/slides/*.{png,jpg,jpeg,svg}', { eager: true })).map((module: any) => module.default);
 
 function Home() {
+  const { t, i18n } = useTranslation();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [visitorCount, setVisitorCount] = useState(0);
+  const [currentLanguage, setCurrentLanguage] = useState('en');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const languages = [
+    { code: 'en', label: 'English', flag: usFlag },
+    { code: 'vi', label: 'Tiếng Việt', flag: vnFlag },
+  ];
 
   const marqueeAnimation = useSpring({
     from: { transform: 'translateX(0%)' },
@@ -79,42 +92,53 @@ function Home() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  useEffect(() => {
-    const links = document.querySelectorAll('a[href^="#"], button');
-    links.forEach(link => {
-      link.addEventListener('click', (event) => {
-        const targetId = link.getAttribute('href')?.substring(1);
-        if (targetId) {
-          event.preventDefault();
-          scrollToSection(targetId);
-        }
-      });
-    });
-
-    return () => {
-      links.forEach(link => {
-        link.removeEventListener('click', (event) => {
-          const targetId = link.getAttribute('href')?.substring(1);
-          if (targetId) {
-            event.preventDefault();
-            scrollToSection(targetId);
-          }
-        });
-      });
-    };
-  }, []);
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    setCurrentLanguage(lng);
+    setIsDropdownOpen(false); // Đóng dropdown sau khi chọn
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-dark text-dark dark:text-white transition-colors">
       {/* Navigation */}
       <nav className="fixed w-full z-50 bg-white/80 dark:bg-dark/80 backdrop-blur-sm transition-colors">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-primary">BEATER.</Link>
+          <Link to="/" className="text-2xl font-bold text-primary">{t('siteTitle')}</Link>
           <div className="hidden md:flex items-center gap-8">
-            <a href="#about" className="hover:text-primary transition">About</a>
-            <a href="#work" className="hover:text-primary transition">Work</a>
-            <a href="#contact" className="hover:text-primary transition">Contact</a>
+            <a href="#about" className="hover:text-primary transition">{t('about')}</a>
+            <a href="#project" className="hover:text-primary transition">{t('myProject.title')}</a>
+            <a href="#contact" className="hover:text-primary transition">{t('contact')}</a>
             <ThemeToggle />
+            <div
+              className="relative"
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
+            >
+              <button className="flex items-center gap-2 bg-transparent border border-gray-300 dark:border-gray-600 rounded-t px-2 py-1 text-gray-800 dark:text-gray-200 bg-white dark:bg-dark focus:outline-none focus:ring-2 focus:ring-primary whitespace-nowrap w-40">
+                <img
+                  src={languages.find((lang) => lang.code === currentLanguage)?.flag}
+                  alt={`${currentLanguage} Flag`}
+                  className="inline-block w-5 h-5 rounded-full"
+                />
+                {languages.find((lang) => lang.code === currentLanguage)?.label}
+              </button>
+              <ul
+                className={`absolute left-0 w-40 bg-white dark:bg-dark border border-gray-300 dark:border-gray-600 rounded-b shadow-lg transition-all duration-250 ${
+                  isDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                }`}
+              >
+                {languages.map((lang) => (
+                  <li
+                    key={lang.code}
+                    onClick={() => changeLanguage(lang.code)}
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer whitespace-nowrap"
+                  >
+                    <img src={lang.flag} alt={`${lang.label} Flag`} className="inline-block w-5 h-5 rounded-full" />
+                    {lang.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
           <button className="md:hidden">
             <Menu className="w-6 h-6" />
@@ -129,24 +153,24 @@ function Home() {
             className="absolute inset-0 bg-cover bg-center bg-fixed transition-opacity duration-1000"
             style={{ backgroundImage: `url(${images[currentImageIndex]})` }}
           ></div>
-          <div className="absolute inset-0 bg-white/75 dark:bg-dark/75 transition-colors"></div>
+          <div className="absolute inset-0 bg-dark/50 dark:bg-dark/75 transition-colors"></div>
         </div>
         <div className="container mx-auto px-4 z-10">
           <div className="max-w-4xl">
             <h1 className="text-7xl md:text-9xl font-bold mb-6 animate-fade-in-up">
-              <span className="text-stroke dark:text-stroke-light">Welcome!</span>
+              <span className="text-stroke dark:text-stroke-light">{t('welcome')}</span>
               <br />
-              <span className="text-primary">My name is Hieu.</span>
+              <span className="text-primary">{t('name')}</span>
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl animate-fade-in-up delay-200">
-              Welcome to my portfolio website!
+            <p className="text-xl text-gray-300 dark:text-gray-300 mb-8 max-w-2xl animate-fade-in-up delay-200">
+              {t('heroDescription')}
             </p>
             <div className="flex gap-4 animate-fade-in-up delay-400">
               <button onClick={() => scrollToSection('work')} className="bg-primary hover:bg-primary-dark px-8 py-4 rounded-full flex items-center gap-2">
-                My Project <ArrowRight className="w-5 h-5" />
+                {t('myProject.title')} <ArrowRight className="w-5 h-5" />
               </button>
               <button onClick={() => scrollToSection('about')} className="bg-primary hover:bg-primary-dark px-8 py-4 rounded-full flex items-center gap-2">
-                About Me <ArrowRight className="w-5 h-5" />
+                {t('aboutMe.title')} <ArrowRight className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -171,41 +195,48 @@ function Home() {
       {/* About Section */}
       <section id="about" className="py-20 bg-gray-100 dark:bg-dark-light transition-colors">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-16 items-start">
             <div className="reveal">
               <h2 className="text-6xl font-bold mb-8">
-                About <span className="text-primary">Me</span>
+                {t('aboutMe.title').split(' ').slice(0, -1).join(' ')}{' '}
+                <span className="text-primary">{t('aboutMe.title').split(' ').slice(-1)}</span>
               </h2>
               <p className="text-gray-600 dark:text-gray-300 mb-6">
-                I'm a creative developer with a passion for building beautiful, functional websites and applications. With expertise in modern web technologies, I bring ideas to life through clean code and intuitive design.
+                {t('aboutMe.description')}
               </p>
               <div className="grid grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-xl font-bold mb-2">Skills</h3>
-                  <ul className="text-gray-600 dark:text-gray-300 space-y-2">
-                    <li>C/C++</li>
-                    <li>Java</li>
-                    <li>Kotlin</li>
-                    <li>C#</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">Experience</h3>
-                  <ul className="text-gray-600 dark:text-gray-300 space-y-2">
-                    <li>3+ Years</li>
-                    <li>2+ Projects</li>
-                    <li>1+ Clients</li>
-                  </ul>
+                  <h3 className="text-xl font-bold mb-2">{t('skills')}</h3>
+                  <div className="space-y-4">
+                    {[
+                      { skill: 'C/C++', level: 8 },
+                      { skill: 'Java', level: 7 },
+                      { skill: 'Kotlin', level: 5 },
+                      { skill: 'C#', level: 6 },
+                    ].map((item, index) => (
+                      <div key={index} className="reveal">
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{item.skill}</span>
+                          <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{item.level}/10</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
+                          <div
+                            className="bg-gradient-to-r from-primary to-primary-light h-2.5 rounded-full"
+                            style={{
+                              '--progress-width': `${item.level * 10}%`,
+                            } as React.CSSProperties}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <Link to="/about" className="inline-block mt-4 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full">
-                See more
-              </Link>
             </div>
             <div className="relative reveal">
               <img 
                 src="dist/assets/portrait/portrait_01.jpg"
-                alt="Developer workspace"
+                alt={t('developerWorkspace')}
                 className="rounded-lg"
               />
               <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-primary rounded-lg -z-10"></div>
@@ -218,21 +249,22 @@ function Home() {
       <section id="work" className="py-20 bg-white dark:bg-dark transition-colors">
         <div className="container mx-auto px-4">
           <h2 className="text-6xl font-bold mb-16 reveal">
-            My <span className="text-primary">Project</span>
+            {t('myProject.title').split(' ').slice(0, -1).join(' ')}{' '}
+            <span className="text-primary">{t('myProject.title').split(' ').slice(-1)}</span>
           </h2>
           <div className="grid md:grid-cols-2 gap-8">
             {[1, 2, 3, 4].map((project) => (
               <div key={project} className="relative h-[400px] project-card group reveal">
                 <img 
                   src={`https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=800&fit=crop`}
-                  alt={`Project ${project}`}
+                  alt={`${t('project')} ${project}`}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 z-10 p-8 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                  <h3 className="text-2xl font-bold mb-2">Project {project}</h3>
-                  <p className="text-gray-300 mb-4">Web Development / UI Design</p>
+                  <h3 className="text-2xl font-bold mb-2">{t('project')} {project}</h3>
+                  <p className="text-gray-300 mb-4">{t('webDevelopment')} / {t('uiDesign')}</p>
                   <a href="#" className="inline-flex items-center gap-2 text-primary hover:gap-4 transition-all">
-                    View Project <ArrowRight className="w-5 h-5" />
+                    {t('myProject.view')} <ArrowRight className="w-5 h-5" />
                   </a>
                 </div>
               </div>
@@ -246,7 +278,8 @@ function Home() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center reveal">
             <h2 className="text-6xl font-bold mb-8">
-              My <span className="text-primary">Social Network</span>
+              {t('mySocialNetwork.title').split(' ').slice(0, -1).join(' ')}{' '}
+              <span className="text-primary">{t('mySocialNetwork.title').split(' ').slice(-1).join(' ')}</span>
             </h2>
             <div className="flex justify-center gap-6">
               <a href="https://github.com/NTH2k4" className="social-button github">
@@ -276,11 +309,11 @@ function Home() {
       <footer className="bg-gray-100 dark:bg-dark-light py-8 transition-colors relative">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-600 dark:text-gray-400">© 2024 BEATER. All rights reserved.</p>
+            <p className="text-gray-600 dark:text-gray-400">© 2024 BEATER. {t('allRightsReserved')}</p>
           </div>
         </div>
         <div className="absolute bottom-4 right-4 text-sm text-gray-600 dark:text-gray-400">
-          Visitors: {visitorCount}
+          {t('visitors')}: {visitorCount}
         </div>
       </footer>
     </div>
