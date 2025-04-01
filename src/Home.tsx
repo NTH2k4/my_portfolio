@@ -89,7 +89,10 @@ function Home() {
   }, []);
 
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const changeLanguage = (lng: string) => {
@@ -105,9 +108,24 @@ function Home() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link to="/" className="text-2xl font-bold text-primary">{t('siteTitle')}</Link>
           <div className="hidden md:flex items-center gap-8">
-            <a href="#about" className="hover:text-primary transition">{t('about')}</a>
-            <a href="#project" className="hover:text-primary transition">{t('myProject.title')}</a>
-            <a href="#contact" className="hover:text-primary transition">{t('contact')}</a>
+            <button
+              onClick={() => scrollToSection('about')}
+              className="hover:text-primary transition"
+            >
+              {t('about')}
+            </button>
+            <button
+              onClick={() => scrollToSection('work')}
+              className="hover:text-primary transition"
+            >
+              {t('project')}
+            </button>
+            <button
+              onClick={() => scrollToSection('contact')}
+              className="hover:text-primary transition"
+            >
+              {t('contact')}
+            </button>
             <ThemeToggle />
             <div
               className="relative"
