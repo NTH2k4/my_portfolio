@@ -5,7 +5,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-// Import quốc kỳ từ thư mục assets
+// Import flags in folder assets
 import usFlag from '/dist/assets/flags/us.png';
 import vnFlag from '/dist/assets/flags/vn.png';
 
@@ -18,25 +18,33 @@ function Home() {
   const [visitorCount, setVisitorCount] = useState(0);
   const [currentLanguage, setCurrentLanguage] = useState('en');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [timer, setTimer] = useState<number | null>(null); // Use number for `setTimeout`
 
   const languages = [
     { code: 'en', label: 'English', flag: usFlag },
     { code: 'vi', label: 'Tiếng Việt', flag: vnFlag },
   ];
 
-  const marqueeAnimation = useSpring({
-    from: { transform: 'translateX(0%)' },
-    to: { transform: 'translateX(-100%)' },
-    config: { duration: 30000 }, // 30 seconds for smooth motion
-    loop: true,
-  });
+  const startTimer = () => {
+    const newTimer = window.setTimeout(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000); // Set timer to 5 seconds
+    setTimer(newTimer);
+  };
+
+  const resetTimer = () => {
+    if (timer) {
+      clearTimeout(timer); // Clear the existing timer
+    }
+    startTimer(); // Start a new timer
+  };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000); // Change image every 5 seconds
+    startTimer(); // Start the initial timer
 
-    return () => clearInterval(interval);
+    return () => {
+      if (timer) clearTimeout(timer); // Cleanup timer on unmount
+    };
   }, [images.length]);
 
   useEffect(() => {
@@ -60,14 +68,17 @@ function Home() {
 
   const handlePrevClick = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    resetTimer(); // Reset timer on previous click
   };
 
   const handleNextClick = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    resetTimer(); // Reset timer on next click
   };
 
   const handleIndicatorClick = (index: number) => {
     setCurrentImageIndex(index);
+    resetTimer(); // Reset timer on indicator click
   };
 
   useEffect(() => {
@@ -106,7 +117,13 @@ function Home() {
       {/* Navigation */}
       <nav className="fixed w-full z-50 bg-white/80 dark:bg-dark/80 backdrop-blur-sm transition-colors">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-primary">{t('siteTitle')}</Link>
+          <Link
+            to="/"
+            className="text-2xl font-bold text-primary"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            {t('siteTitle')}
+          </Link>
           <div className="hidden md:flex items-center gap-8">
             <button
               onClick={() => scrollToSection('about')}
@@ -121,10 +138,10 @@ function Home() {
               {t('project')}
             </button>
             <button
-              onClick={() => scrollToSection('contact')}
+              onClick={() => scrollToSection('connect')}
               className="hover:text-primary transition"
             >
-              {t('contact')}
+              {t('connect')}
             </button>
             <ThemeToggle />
             <div
@@ -291,13 +308,13 @@ function Home() {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-20 bg-white dark:bg-dark transition-colors">
+      {/* connect Section */}
+      <section id="connect" className="py-20 bg-white dark:bg-dark transition-colors">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center reveal">
             <h2 className="text-6xl font-bold mb-8">
-              {t('mySocialNetwork.title').split(' ').slice(0, -1).join(' ')}{' '}
-              <span className="text-primary">{t('mySocialNetwork.title').split(' ').slice(-1).join(' ')}</span>
+              {t('connectWithMe.title').split(' ').slice(0, -1).join(' ')}{' '}
+              <span className="text-primary">{t('connectWithMe.title').split(' ').slice(-1).join(' ')}</span>
             </h2>
             <div className="flex justify-center gap-6">
               <a href="https://github.com/NTH2k4" className="social-button github">
@@ -327,7 +344,7 @@ function Home() {
       <footer className="bg-gray-100 dark:bg-dark-light py-8 transition-colors relative">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-600 dark:text-gray-400">© 2024 BEATER. {t('allRightsReserved')}</p>
+            <p className="text-gray-600 dark:text-gray-400">© 2025 BEATER. {t('allRightsReserved')}</p>
           </div>
         </div>
         <div className="absolute bottom-4 right-4 text-sm text-gray-600 dark:text-gray-400">
