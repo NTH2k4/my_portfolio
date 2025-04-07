@@ -1,7 +1,7 @@
 {
   "siteTitle": "BEATER.",
   "about": "About",
-  "contact": "Contact",
+  "connect": "Connect",
   "welcome": "Welcome!",
   "name": "My name is Hieu.",
   "heroDescription": "Welcome to my portfolio website!",
@@ -15,8 +15,8 @@
     "title": "My Project",
     "view": "View Project"
   },
-  "mySocialNetwork": {
-    "title": "My Social Network"
+  "connectWithMe": {
+    "title": "Connect with Me"
   },
   "me": "Me",
   "project": "Project",

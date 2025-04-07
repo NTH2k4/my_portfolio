@@ -1,7 +1,7 @@
 {
   "siteTitle": "BEATER.",
   "about": "Thông tin",
-  "contact": "Liên hệ",
+  "connect": "Liên hệ",
   "welcome": "Xin chào!",
   "name": "Tôi là Hiếu.",
   "heroDescription": "Chào mừng bạn đến với trang portfolio của tôi!",
@@ -15,8 +15,8 @@
     "title": "Dự án của tôi",
     "view": "Xem dự án"
   },
-  "mySocialNetwork": {
-    "title": "Liên hệ với tôi"
+  "connectWithMe": {
+    "title": "Kết nối với Tôi"
   },
   "me": "Tôi",
   "my": "Của tôi",
