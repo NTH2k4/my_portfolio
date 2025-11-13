@@ -60,15 +60,25 @@ function Home() {
     // Fetch and update visitor count using CountAPI
     const fetchVisitorCount = async () => {
       try {
-        const response = await fetch('https://api.countapi.xyz/hit/beater-portfolio/homepage-visitors');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+        const response = await fetch(
+          'https://api.countapi.xyz/hit/beater-portfolio/homepage-visitors',
+          { signal: controller.signal }
+        );
+        
+        clearTimeout(timeoutId);
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setVisitorCount(data.value);
+        setVisitorCount(data.value || 0);
       } catch (error) {
-        console.error('Failed to fetch visitor count:', error);
-        setVisitorCount(0); // Fallback value
+        console.warn('Visitor count fetch failed (this is ok):', error instanceof Error ? error.message : String(error));
+        // Don't set to 0, just keep it as is or use a default message
+        setVisitorCount(-1); // Use -1 to indicate failed load, we'll hide it in UI
       }
     };
 
@@ -357,7 +367,7 @@ function Home() {
           </div>
         </div>
         <div className="absolute bottom-4 right-4 text-sm text-gray-600 dark:text-gray-400">
-          {t('visitors')}: {visitorCount}
+          {visitorCount > 0 && `${t('visitors')}: ${visitorCount}`}
         </div>
       </footer>
     </div>
