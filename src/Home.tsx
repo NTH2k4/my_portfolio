@@ -1,16 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { useSpring, animated } from 'react-spring';
 import { Github, Linkedin, Mail, ArrowRight, Menu, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-// Import flags in folder assets
-import usFlag from '/dist/assets/flags/us.png';
-import vnFlag from '/dist/assets/flags/vn.png';
+// Import chỉ các ảnh cần thiết từ thư mục slides
+const images = Object.values(
+  import.meta.glob('/src/assets/slides/*.{png,jpg,jpeg,svg}', { eager: true })
+).map((module: any) => module.default);
 
-// Import all images from the slides directory
-const images = Object.values(import.meta.glob('/dist/assets/slides/*.{png,jpg,jpeg,svg}', { eager: true })).map((module: any) => module.default);
+// Import trực tiếp các ảnh từ thư mục assets/flags
+import usFlag from '/src/assets/flags/us.png';
+import vnFlag from '/src/assets/flags/vn.png';
+
+// Import ảnh portrait
+import portrait from '/src/assets/portrait/portrait_01.jpg';
+
+const flags = {
+  us: usFlag,
+  vn: vnFlag,
+};
+
+const languages = [
+  { code: 'en', label: 'English', flag: flags['us'] },
+  { code: 'vi', label: 'Tiếng Việt', flag: flags['vn'] },
+];
 
 function Home() {
   const { t, i18n } = useTranslation();
@@ -19,11 +33,6 @@ function Home() {
   const [currentLanguage, setCurrentLanguage] = useState('en');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [timer, setTimer] = useState<number | null>(null); // Use number for `setTimeout`
-
-  const languages = [
-    { code: 'en', label: 'English', flag: usFlag },
-    { code: 'vi', label: 'Tiếng Việt', flag: vnFlag },
-  ];
 
   const startTimer = () => {
     const newTimer = window.setTimeout(() => {
@@ -270,7 +279,7 @@ function Home() {
             </div>
             <div className="relative reveal">
               <img 
-                src="dist/assets/portrait/portrait_01.jpg"
+                src={portrait} // Sử dụng biến import để đảm bảo ảnh được bao gồm trong build
                 alt={t('developerWorkspace')}
                 className="rounded-lg"
               />

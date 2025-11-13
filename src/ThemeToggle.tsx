@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useTheme } from './ThemeContext';
 
 export const ThemeToggle = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
+  const { theme, setTheme } = useTheme();
 
   const handleToggle = () => {
-    setIsDarkMode(!isDarkMode);
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   return (
@@ -21,7 +14,7 @@ export const ThemeToggle = () => {
         <input
           type="checkbox"
           id="theme-toggle"
-          checked={isDarkMode}
+          checked={theme === 'dark'}
           onChange={handleToggle}
         />
         <label
