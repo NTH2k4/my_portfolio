@@ -9,7 +9,10 @@ export default defineConfig({
   },
   build: {
     assetsInlineLimit: 0,
+    outDir: 'dist',
+    emptyOutDir: true,
   },
+  publicDir: 'public',
   server: {
     headers: {
       'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
