@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Github, Linkedin, Mail, ArrowRight, Menu, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { Link } from 'react-router-dom';
@@ -29,10 +29,11 @@ const languages = [
 function Home() {
   const { t, i18n } = useTranslation();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [visitorCount, setVisitorCount] = useState(0);
+  const [visitorCount, setVisitorCount] = useState<number | null>(null); // null = loading, -1 = failed, 0+ = success
   const [currentLanguage, setCurrentLanguage] = useState('en');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [timer, setTimer] = useState<number | null>(null); // Use number for `setTimeout`
+  const visitorCountInitialized = useRef(false); // Prevent double-count in StrictMode
 
   const startTimer = () => {
     const newTimer = window.setTimeout(() => {
@@ -57,33 +58,22 @@ function Home() {
   }, [images.length]);
 
   useEffect(() => {
-    // Fetch and update visitor count using CountAPI
-    const fetchVisitorCount = async () => {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
-        const response = await fetch(
-          'https://api.countapi.xyz/hit/beater-portfolio/homepage-visitors',
-          { signal: controller.signal }
-        );
-        
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setVisitorCount(data.value || 0);
-      } catch (error) {
-        console.warn('Visitor count fetch failed (this is ok):', error instanceof Error ? error.message : String(error));
-        // Don't set to 0, just keep it as is or use a default message
-        setVisitorCount(-1); // Use -1 to indicate failed load, we'll hide it in UI
-      }
-    };
-
-    fetchVisitorCount();
-  }, []);
+    // Use localStorage to track visitor count
+    // Prevent double-counting in React StrictMode using useRef
+    if (visitorCountInitialized.current) return;
+    visitorCountInitialized.current = true;
+    
+    try {
+      const storedCount = localStorage.getItem('visitorCount');
+      const currentCount = storedCount ? parseInt(storedCount, 10) + 1 : 1;
+      
+      localStorage.setItem('visitorCount', currentCount.toString());
+      setVisitorCount(currentCount);
+    } catch (error) {
+      console.warn('Failed to update visitor count:', error);
+      setVisitorCount(-1);
+    }
+  }, [visitorCountInitialized]);
 
   const handlePrevClick = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
@@ -367,7 +357,7 @@ function Home() {
           </div>
         </div>
         <div className="absolute bottom-4 right-4 text-sm text-gray-600 dark:text-gray-400">
-          {visitorCount > 0 && `${t('visitors')}: ${visitorCount}`}
+          {visitorCount !== null && visitorCount >= 0 && `${t('visitors')}: ${visitorCount}`}
         </div>
       </footer>
     </div>
